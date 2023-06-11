@@ -38,5 +38,5 @@ class RoomManager(BaseMessageHandler):
         
         
     def _player_action(self, content:str):
-        logging.info("receive join message")
+        logging.info("receive playerAction message")
         self._send_message_to_all_devices(Message(MessageType=MessageType.PlayerAction.value, Content=content))
