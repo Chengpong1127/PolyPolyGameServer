@@ -9,7 +9,6 @@ from Server.BaseMessageHandler import BaseMessageHandler
 class ServerManager(BaseMessageHandler):
 
     def __init__(self, config):
-        server_port = 8000
         self.host = config["host"]
         self.playerCount = config["playerCount"]
         self.server_peer = SessionManager(self.host)
@@ -19,7 +18,7 @@ class ServerManager(BaseMessageHandler):
         self.room_list = dict()
         
         self.room_port_set = set()
-        self.room_port_set.add(server_port)
+        self.room_port_set.add(self.host.Port)
         ServerManager._instance = self
     @staticmethod
     def Instance():
@@ -76,7 +75,7 @@ class ServerManager(BaseMessageHandler):
             new_port = uuid.uuid4().int % 10000 + 8000
             if new_port not in self.room_port_set:
                 self.room_port_set.add(new_port)
-                return HostInfo("localhost", new_port)
+                return HostInfo(self.host.IP, new_port)
     def _send_create_room_message(self, room: RoomManager):
         message = Message(MessageType=MessageType.CreateRoom.value, Content = room.GetRoomInfo().json)
         self._send_message_to_all(message, room.GetDeviceList())
