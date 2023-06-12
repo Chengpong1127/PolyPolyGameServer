@@ -5,6 +5,7 @@ from Server.SessionManager import SessionManager
 from uuid import UUID
 import uuid
 from Server.BaseMessageHandler import BaseMessageHandler
+from Basic.Event import Event
 
 class RoomManager(BaseMessageHandler):
     def __init__(self,roomID: UUID , deviceIDHostMap: dict, hostInfo: HostInfo) -> None:
@@ -12,6 +13,7 @@ class RoomManager(BaseMessageHandler):
         self.sessionManager = SessionManager(hostInfo)
         super().__init__(self.sessionManager, deviceIDHostMap)
         self.RoomInfo = self.GetRoomInfo()
+        self.OnCloseRoom = Event()
         
         
     def GetRoomInfo(self):
@@ -40,6 +42,8 @@ class RoomManager(BaseMessageHandler):
         
         
     def _gameOver(self, content):
+        logging.info("game over")
         self._send_message_to_all_devices(Message(MessageType=MessageType.GameOver.value, Content=content))
+        self.OnCloseRoom.Invoke(self.RoomID)
     def _player_action(self, content:str):
         self._send_message_to_all_devices(Message(MessageType=MessageType.PlayerAction.value, Content=content))

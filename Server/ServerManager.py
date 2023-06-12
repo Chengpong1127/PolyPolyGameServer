@@ -66,10 +66,15 @@ class ServerManager(BaseMessageHandler):
         
         room = RoomManager(new_room_id, device_host_map, new_room_host)
         self.room_list[new_room_id] = room
+        room.OnCloseRoom += self._on_close_room
         room.run()
         self._send_create_room_message(room)
         logging.info("create new room successfully")
-        
+    def _on_close_room(self, roomid: uuid.UUID):
+        del self.room_list[roomid]
+        logging.info("room closed")
+            
+    
     def _create_new_room_host(self):
         while True:
             new_port = uuid.uuid4().int % 10000 + 8000
