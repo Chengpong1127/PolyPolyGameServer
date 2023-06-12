@@ -11,6 +11,7 @@ class MessageType(Enum):
     CreateRoom = "CreateRoom"
     TestMessage = "TestMessage"
     JoinMessage = "JoinMessage"
+    GameOver = "GameOver"
 
 class TeamID(Enum):
     Blue = "Blue"

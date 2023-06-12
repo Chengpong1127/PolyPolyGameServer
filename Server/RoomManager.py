@@ -33,10 +33,13 @@ class RoomManager(BaseMessageHandler):
             logging.info("receive join message")
         elif message.MessageType == MessageType.PlayerLeave.value:
             self._player_leave(message.DeviceID, message.Content)
+        elif message.MessageType == MessageType.GameOver.value:
+            self._gameOver(message.Content)
         else:
             logging.warn("receive unknown message")
         
         
+    def _gameOver(self, content):
+        self._send_message_to_all_devices(Message(MessageType=MessageType.GameOver.value, Content=content))
     def _player_action(self, content:str):
-        logging.info("receive playerAction message")
         self._send_message_to_all_devices(Message(MessageType=MessageType.PlayerAction.value, Content=content))

@@ -40,14 +40,14 @@ class SessionManager:
         self.TCPsock.close()
             
     def _tcp_handle(self,client,addr):
+        host = HostInfo(addr[0], addr[1])
         while True:
             try:
                 
                 data = self._receiveOnePacket(client)
-                host = HostInfo(addr[0], addr[1])
                 self._handleMessage(data, host)
             except ConnectionResetError:
-                self.OnPeerDisconnect.Invoke()
+                self.OnPeerDisconnect.Invoke(host)
                 break
             
     def _receiveOnePacket(self, client: socket.socket):

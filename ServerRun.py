@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 Server_config = {
     "host": HostInfo("localhost", 8000),
-    "playerCount": 1,
+    "playerCount": 2,
 }
 server = ServerManager(Server_config)
 server.run()

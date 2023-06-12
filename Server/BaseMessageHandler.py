@@ -11,6 +11,7 @@ class BaseMessageHandler(object):
     def __init__(self, sessionManager: SessionManager, deviceIDHostMap: dict = {}):
         self.sessionManager = sessionManager
         self.sessionManager.OnReceiveMessage += self._handleInputData
+        self.sessionManager.OnPeerDisconnect += self._handlePeerDisconnect
         self.DeviceIDHostMap = deviceIDHostMap
 
     def run(self):
@@ -21,6 +22,8 @@ class BaseMessageHandler(object):
     
     def _handleInputData(self, message: str, host: HostInfo):
         try:
+            if len(message) == 0:
+                return
             data = String2Message(message)
             self.DeviceIDHostMap[data.DeviceID] = host
             self.HandleMessage(data)
@@ -28,7 +31,7 @@ class BaseMessageHandler(object):
             logging.error("Error when handleMessage: ", error)
     
     def HandleMessage(self, message: Message):
-        raise NotImplementedError
+        logging.warning("BaseMessageHandler: HandleMessage not implemented")
         
     def _send_message_to_all_devices(self, message: Message):
         self._send_message_to_all(message, self.GetDeviceList())
@@ -45,3 +48,7 @@ class BaseMessageHandler(object):
     def _get_device_host(self, deviceID:str):
         assert deviceID in self.DeviceIDHostMap
         return self.DeviceIDHostMap[deviceID]
+    
+    def _handlePeerDisconnect(self, host: HostInfo):
+        logging.info("Peer disconnect")
+        
