@@ -46,4 +46,5 @@ class RoomManager(BaseMessageHandler):
         self._send_message_to_all_devices(Message(MessageType=MessageType.GameOver.value, Content=content))
         self.OnCloseRoom.Invoke(self.RoomID)
     def _player_action(self, content:str):
+        logging.info("receive player action")
         self._send_message_to_all_devices(Message(MessageType=MessageType.PlayerAction.value, Content=content))
